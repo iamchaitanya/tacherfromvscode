@@ -1,52 +1,33 @@
+// services/geminiService.ts
 
-import { GoogleGenAI, Type } from "@google/genai";
-
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
+// Mock function - simulates AI profile summarization
 export const summarizeProfile = async (rawText: string) => {
-  const response = await ai.models.generateContent({
-    model: 'gemini-3-flash-preview',
-    contents: `Analyze the following teacher resume text and provide a concise 3-sentence professional bio and a list of 5 key skills. 
-    Text: ${rawText}`,
-    config: {
-      responseMimeType: "application/json",
-      responseSchema: {
-        type: Type.OBJECT,
-        properties: {
-          bio: { type: Type.STRING },
-          skills: {
-            type: Type.ARRAY,
-            items: { type: Type.STRING }
-          }
-        },
-        required: ["bio", "skills"]
-      }
-    }
+  console.log("Mock AI summarizing:", rawText);
+  
+  // Return fake data after a short delay
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        bio: "This is a simulated AI-generated bio. The user appears to be an experienced educator with a passion for student success and curriculum development.",
+        skills: ["Classroom Management", "Curriculum Design", "Student Engagement", "Mock Skill 1", "Mock Skill 2"]
+      });
+    }, 1000);
   });
-  return JSON.parse(response.text);
 };
 
+// Mock function - simulates AI job matching
 export const matchJobs = async (teacherProfile: any, jobs: any[]) => {
-  const response = await ai.models.generateContent({
-    model: 'gemini-3-flash-preview',
-    contents: `Based on the teacher's profile: ${JSON.stringify(teacherProfile)}, 
-    rank these job listings by compatibility: ${JSON.stringify(jobs)}.
-    Return an array of objects with jobId and a matchScore (0-100) and a brief reasoning string.`,
-    config: {
-      responseMimeType: "application/json",
-      responseSchema: {
-        type: Type.ARRAY,
-        items: {
-          type: Type.OBJECT,
-          properties: {
-            jobId: { type: Type.STRING },
-            matchScore: { type: Type.NUMBER },
-            reasoning: { type: Type.STRING }
-          },
-          required: ["jobId", "matchScore", "reasoning"]
-        }
-      }
-    }
+  console.log("Mock AI matching jobs for:", teacherProfile.name);
+
+  // Return fake match scores
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const results = jobs.map((job) => ({
+        jobId: job.id,
+        matchScore: Math.floor(Math.random() * 40) + 60, // Random score between 60-100
+        reasoning: "This is a simulated AI match reasoning. The candidate's skills align well with the job requirements."
+      }));
+      resolve(results);
+    }, 1000);
   });
-  return JSON.parse(response.text);
 };
